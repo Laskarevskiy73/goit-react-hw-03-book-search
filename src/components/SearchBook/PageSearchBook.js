@@ -8,34 +8,7 @@ import genres from './genres.json';
 import * as BookAPI from '../services/BookAPI';
 import style from './css/PageSearchBook.module.css';
 import 'react-notifications/lib/notifications.css';
-
-const mapper = items => {
-  return items.map(item => {
-    const { id } = item;
-    const {
-      title = '',
-      description = '',
-      authors: author = [],
-      publisher = '',
-      publishedDate = '',
-      pageCount = 0,
-      averageRating: rating = 0,
-      imageLinks: { thumbnail: image },
-    } = item.volumeInfo;
-
-    return {
-      id,
-      image,
-      rating,
-      pageCount,
-      title,
-      description,
-      author,
-      publisher,
-      publishedDate,
-    };
-  });
-};
+import mapper from './mapper';
 
 export default class PageSearchBook extends Component {
   state = {
@@ -48,7 +21,7 @@ export default class PageSearchBook extends Component {
 
     BookAPI.getBookByQuery()
       .then(({ data: { items } }) => this.setState({ books: mapper(items) }))
-      .catch(error => error)
+      .catch(error => createNotification('error', '', error))
       .finally(() => this.setState({ loading: false }));
   }
 
@@ -60,7 +33,7 @@ export default class PageSearchBook extends Component {
         this.setState({ books: mapper(items) });
         createNotification('success', genre);
       })
-      .catch(error => createNotification('error', error))
+      .catch(error => createNotification('error', genre, error))
       .finally(() => this.setState({ loading: false }));
   };
 

@@ -20,7 +20,7 @@ const createNotification = (type, genre, error) => {
       );
       break;
     case 'error':
-      NotificationManager.error(`${error}`, 5000);
+      NotificationManager.error(`${error}`);
       break;
     default:
       break;
