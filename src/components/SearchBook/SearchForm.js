@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import shortid from 'shortid';
+import { NotificationContainer } from 'react-notifications';
 import PropTypes from 'prop-types';
+import createNotification from './Notifications';
 import style from './css/SearchForm.module.css';
+import 'react-notifications/lib/notifications.css';
 
 export default class SearchForm extends Component {
   state = {
@@ -24,6 +27,14 @@ export default class SearchForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
+
+    const { genre, query } = this.state;
+    const emptyQuery = genre === '' && query === '';
+
+    if (emptyQuery) {
+      createNotification('error', '', 'Enter your request please!');
+      return;
+    }
 
     this.props.onSubmit(this.state);
 
@@ -63,6 +74,7 @@ export default class SearchForm extends Component {
         >
           Search
         </button>
+        <NotificationContainer />
       </form>
     );
   }
